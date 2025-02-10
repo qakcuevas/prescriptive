@@ -1,3 +1,4 @@
+import streamlit as st
 import plotly.express as px
 import pandas as pd
 import numpy as np
@@ -15,4 +16,5 @@ data = pd.DataFrame({
 fig = px.line(data, x="Date", y="Active_Users", color="Location",
               markers=True, title="Active Users Over Time")
 
-fig.show()
+st.title("Active users cost prediction")
+st.plotly_chart(fig, use_container_width=True)
