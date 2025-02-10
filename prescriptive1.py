@@ -6,7 +6,7 @@ from scipy.optimize import linprog
 
 # 📌 Dummy Data
 dates = pd.date_range(start="2024-01-01", periods=10, freq="ME")
-locations = ["New York", "Los Angeles", "Chicago", "Houston", "Miami"]
+locations = ["Manila", "Quezon City"]
 data = pd.DataFrame({
     "Date": np.tile(dates, len(locations)),
     "Location": np.repeat(locations, len(dates)),
