@@ -50,7 +50,7 @@ selected_location = st.selectbox("📍 Select a Location", locations)
 filtered_data = data[data["Location"] == selected_location].copy()
 
 # 📌 Interactive Sliders 🔥
-active_users = st.slider("👥 Active Users", min_value=500, max_value=10000, value=3000, step=100)
+active_users = st.slider("👥 Active Users", min_value=10, max_value=1000, value=3000, step=100)
 num_posts = st.slider("📝 Number of Posts", min_value=10, max_value=1000, value=200, step=10)
 
 # 📌 Calculate Prescribed Price
