@@ -7,6 +7,7 @@ from scipy.optimize import linprog
 # 📌 Dummy Data
 dates = pd.date_range(start="2024-01-01", periods=10, freq="ME")
 locations = ["Manila", "Quezon City"]
+
 data = pd.DataFrame({
     "Date": np.tile(dates, len(locations)),
     "Location": np.repeat(locations, len(dates)),
@@ -23,10 +24,8 @@ def prescribe_price(active_users, num_posts):
     c = [-1]  # Maximize price
 
     # Constraints:
-    # - Higher active users should increase price.
-    # - Higher posts should also contribute to price increase.
-    A = [[-1], [-1]]  # Negative sign to flip the inequality
-    b = [- (active_users * 0.1 + num_posts * 0.5)]  # Flip inequality to ensure price grows with users/posts
+    A = [[1], [1]]  # Ensuring price increases with more users/posts
+    b = [active_users * 0.1 + num_posts * 0.5, 5000]  # Upper bound constraints
 
     bounds = [(0, None)]  # Price should be non-negative
 
