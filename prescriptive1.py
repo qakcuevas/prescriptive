@@ -18,14 +18,22 @@ data = pd.DataFrame({
 def prescribe_price(active_users, num_posts):
     """
     Uses linear programming to optimize pricing based on active users & posts.
+    The goal is to increase price when active users increase.
     """
-    c = [-1]  # Coefficient for objective function (maximize price)
-    A = [[1], [-1]]  # Constraint coefficients
-    b = [active_users * 0.1 + num_posts * 0.5, 5000]  # Constraints
+    c = [-1]  # Maximize price
+
+    # Constraints:
+    # - Higher active users should increase price.
+    # - Higher posts should also contribute to price increase.
+    A = [[-1], [-1]]  # Negative sign to flip the inequality
+    b = [- (active_users * 0.1 + num_posts * 0.5)]  # Flip inequality to ensure price grows with users/posts
+
     bounds = [(0, None)]  # Price should be non-negative
 
     result = linprog(c, A_ub=A, b_ub=b, bounds=bounds, method="highs")
-    return round(result.x[0], 2) if result.success else 0  # Get optimized price
+
+    return round(result.x[0], 2) if result.success else 0  
+
 
 # 📌 Streamlit UI
 st.title("📊 Prescriptive Analytics: Optimized Pricing Model")
