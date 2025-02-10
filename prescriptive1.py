@@ -15,17 +15,20 @@ data = pd.DataFrame({
     "Number_of_Posts": np.random.randint(50, 500, size=len(dates) * len(locations))
 })
 
-# 📌 Linear Programming Model (Prescriptive Analytics)
+# 📌 Linear Programming Model (Inverse Pricing)
 def prescribe_price(active_users, num_posts):
     """
-    Uses linear programming to optimize pricing based on active users & posts.
-    The goal is to increase price when active users increase.
+    Uses linear programming to determine pricing:
+    - Higher active users → Lower price
+    - Higher posts → Higher price
     """
     c = [-1]  # Maximize price
 
     # Constraints:
-    A = [[1], [1]]  # Ensuring price increases with more users/posts
-    b = [active_users * 0.1 + num_posts * 0.5, 5000]  # Upper bound constraints
+    # - Active users should **decrease** price (+ coefficient)
+    # - Number of posts should **increase** price (- coefficient)
+    A = [[1], [-1]]  # Flip inequalities
+    b = [5000, active_users * 0.05 - num_posts * 0.5]  # Upper limit on price
 
     bounds = [(0, None)]  # Price should be non-negative
 
@@ -35,7 +38,7 @@ def prescribe_price(active_users, num_posts):
 
 
 # 📌 Streamlit UI
-st.title("📊 Prescriptive Analytics: Optimized Pricing Model")
+st.title("📊 Prescriptive Analytics: Inverse Pricing Model")
 st.write("Using **Linear Programming (LP)** to prescribe the best price based on active users & posts.")
 
 # 📌 Select Location
