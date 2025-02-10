@@ -6,7 +6,7 @@ from scipy.optimize import linprog
 
 # 📌 Dummy Data
 dates = pd.date_range(start="2024-01-01", periods=10, freq="ME")
-locations = ["Manila", "Quezon City"]
+locations = ["New York", "Los Angeles", "Chicago", "Houston", "Miami"]
 data = pd.DataFrame({
     "Date": np.tile(dates, len(locations)),
     "Location": np.repeat(locations, len(dates)),
@@ -33,7 +33,7 @@ st.write("Using **Linear Programming (LP)** to prescribe the best price based on
 
 # 📌 Select Location
 selected_location = st.selectbox("📍 Select a Location", locations)
-filtered_data = data[data["Location"] == selected_location]
+filtered_data = data[data["Location"] == selected_location].copy()  # Ensure it's a copy
 
 # 📌 Add **Sliders** for Interactive Adjustments 🔥
 active_users = st.slider("👥 Active Users", min_value=500, max_value=10000, value=3000, step=100)
@@ -42,10 +42,16 @@ num_posts = st.slider("📝 Number of Posts", min_value=10, max_value=1000, valu
 # 📌 Calculate the **Prescribed Price** in PHP based on the user inputs
 prescribed_price = prescribe_price(active_users, num_posts)
 
+# 📌 Add the prescribed price column to `filtered_data`
+filtered_data["Prescribed_Price (PHP)"] = filtered_data.apply(
+    lambda row: prescribe_price(row["Active_Users"], row["Number_of_Posts"]), axis=1
+)
+
 # 📌 Display the **Recommended Price**
 st.metric(label="💰 Recommended Price (PHP)", value=f"₱{prescribed_price}")
 
 # 📌 Plot Data
 fig = px.line(filtered_data, x="Date", y="Prescribed_Price (PHP)", markers=True, 
               title=f"Optimal Pricing Over Time for {selected_location}")
+
 st.plotly_chart(fig, use_container_width=True)
