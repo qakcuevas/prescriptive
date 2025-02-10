@@ -15,31 +15,35 @@ data = pd.DataFrame({
     "Number_of_Posts": np.random.randint(50, 500, size=len(dates) * len(locations))
 })
 
-# 📌 Linear Programming Model (Inverse Pricing)
+# 📌 Linear Programming Model (Dynamic Pricing)
 def prescribe_price(active_users, num_posts):
     """
     Uses linear programming to determine pricing:
     - Higher active users → Lower price
     - Higher posts → Higher price
     """
-    c = [-1]  # Maximizing price
+
+    # Objective Function: Maximize price (-1 for minimization in linprog)
+    c = [-1]
 
     # Constraints:
-    # - Active users **decrease** price → Positive coefficient
-    # - Number of posts **increase** price → Negative coefficient
-    A = [[1], [-1]]  # Constraint coefficients
-    b = [5000, (2000 - active_users) * 0.1 + num_posts * 0.2]  # Adjusted impact
+    # - More active users → Lower price (positive coefficient)
+    # - More posts → Higher price (negative coefficient)
+    A = [[1, -1]]  # Active Users (increase → lower price), Posts (increase → higher price)
+    b = [5000 - (active_users * 0.2) + (num_posts * 0.5)]  # Dynamic limit
 
-    bounds = [(0, None)]  # Price should be non-negative
+    # Bounds: Allow price to be any non-negative value
+    bounds = [(0, None)]  
 
+    # Solve linear program
     result = linprog(c, A_ub=A, b_ub=b, bounds=bounds, method="highs")
 
     return round(result.x[0], 2) if result.success else 0  
 
 
 # 📌 Streamlit UI
-st.title("📊 Prescriptive Analytics: Inverse Pricing Model")
-st.write("Using **Linear Programming (LP)** to prescribe the best price based on active users & posts.")
+st.title("📊 Prescriptive Analytics: Dynamic Pricing Model")
+st.write("Using **Linear Programming (LP)** to adjust pricing dynamically based on active users & posts.")
 
 # 📌 Select Location
 selected_location = st.selectbox("📍 Select a Location", locations)
