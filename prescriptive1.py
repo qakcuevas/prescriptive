@@ -27,10 +27,10 @@ def prescribe_price(active_users, num_posts):
     c = [-1]
 
     # Constraints:
-    # - More active users → Lower price (positive coefficient)
-    # - More posts → Higher price (negative coefficient)
-    A = [[1, -1]]  # Active Users (increase → lower price), Posts (increase → higher price)
-    b = [5000 - (active_users * 0.2) + (num_posts * 0.5)]  # Dynamic limit
+    # - More active users → Lower price
+    # - More posts → Higher price
+    A = [[1]]  # Needs to be a 2D array
+    b = [5000 - (active_users * 0.2) + (num_posts * 0.5)]  # Needs to be a 1D list
 
     # Bounds: Allow price to be any non-negative value
     bounds = [(0, None)]  
