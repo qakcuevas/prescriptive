@@ -30,7 +30,7 @@ def prescribe_price(active_users, num_posts):
     # - More active users → Lower price
     # - More posts → Higher price
     A = [[1]]  # Needs to be a 2D array
-    b = [5000 - (active_users * 0.2) + (num_posts * 0.5)]  # Needs to be a 1D list
+    b = [1000 - (active_users * 0.2) + (num_posts * 0.5)]  # Needs to be a 1D list
 
     # Bounds: Allow price to be any non-negative value
     bounds = [(0, None)]  
